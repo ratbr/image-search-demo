@@ -1,11 +1,13 @@
 package com.ratbr.learn.imagesearch;
 
+import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.app.Activity;
 import android.util.Log;
 import android.view.Menu;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.GridView;
@@ -26,14 +28,29 @@ public class SearchActivity extends Activity {
     GridView gvResults;
     Button btnSearch;
     List<ImageResult> imageResults = new ArrayList<ImageResult>();
+    ImageResultArrayAdapter adapter;
+
     public static final String  SEARCH_URL_PREFIX = "https://ajax.googleapis.com/ajax/services/search/images?v=1.0&rsz=8&q=";
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+        setContentView(R.layout.activity_search);
         setupViews();
+        adapter = new ImageResultArrayAdapter(this, imageResults);
+        gvResults.setAdapter(adapter);
+
+        gvResults.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+                Intent intent = new Intent(getApplicationContext(), ImageDisplayActivity.class);
+                ImageResult imageResult = imageResults.get(i);
+                intent.putExtra("url", imageResult.getFullUrl());
+                startActivity(intent);
+
+            }
+        });
     }
 
     private void setupViews() {
@@ -68,7 +85,7 @@ public class SearchActivity extends Activity {
                 try {
                     imageJsonResults = response.getJSONObject("responseData").getJSONArray("results");
                     imageResults.clear();
-                    imageResults.addAll(ImageResult.fromJsonArray(imageJsonResults));
+                    adapter.addAll(ImageResult.fromJsonArray(imageJsonResults));
 
                     Log.d("DEBUG", imageResults.toString());
                 } catch (JSONException e) {
