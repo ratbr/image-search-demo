@@ -57,6 +57,8 @@ public class SearchActivity extends Activity {
         AsyncHttpClient client = new AsyncHttpClient();
         //https://ajax.googleapis.com/ajax/services/search/images?q=Android&v=1.0
         String currentQuery = SEARCH_URL_PREFIX + Uri.encode(query) + "&start=0";
+        Log.d("DEBUG", currentQuery);
+
         client.get(currentQuery, new JsonHttpResponseHandler() {
 
             @Override
