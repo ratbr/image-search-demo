@@ -7,5 +7,6 @@
     </string>
     <string name="hello_world" >Hello world!
     </string>
-
+    <string name="query_hint">Enter search term</string>
+    <string name="search_button_label">Search</string>
 </resources>
