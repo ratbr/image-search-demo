@@ -32,4 +32,14 @@
             android:layout_below="@+id/btnSearch"
             android:layout_alignParentLeft="true"
             android:numColumns="3"/>
+
+    <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Load More"
+            android:id="@+id/btnMore"
+            android:layout_centerHorizontal="true"
+            android:layout_below="@+id/gvResults"
+            android:onClick="onLoadMore"/>
+
 </RelativeLayout>

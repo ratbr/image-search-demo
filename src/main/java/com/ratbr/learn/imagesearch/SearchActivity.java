@@ -34,6 +34,7 @@ public class SearchActivity extends Activity {
     ImageResultArrayAdapter adapter;
 
     SearchSettings settings;
+    int start = 0;
 
     public static final String  SEARCH_URL_PREFIX = "https://ajax.googleapis.com/ajax/services/search/images?v=1.0&rsz=8&q=";
 
@@ -44,19 +45,7 @@ public class SearchActivity extends Activity {
         setContentView(R.layout.activity_search);
         setupViews();
 
-        //TODO: Settings from saved instance state OR from intent.
-        Intent intent = getIntent();
-        if (intent != null) {
-            Bundle bundle = intent.getExtras();
-            if (bundle != null) {
-                settings = bundle.getParcelable(SearchSettings.SEARCHSETTINGS);
-            }
-
-            String currentQuery = intent.getStringExtra(CURRENTQUERY);
-            if ( (currentQuery != null) && (!currentQuery.isEmpty())) {
-                etQuery.setText(currentQuery);
-            }
-        }
+        inferIntent(getIntent());
 
         if (settings == null) {
             settings = new SearchSettings();
@@ -74,6 +63,20 @@ public class SearchActivity extends Activity {
                 startActivity(intent);
             }
         });
+    }
+
+    private void inferIntent(Intent intent) {
+        if (intent != null) {
+            Bundle bundle = intent.getExtras();
+            if (bundle != null) {
+                settings = bundle.getParcelable(SearchSettings.SEARCHSETTINGS);
+            }
+
+            String currentQuery = intent.getStringExtra(CURRENTQUERY);
+            if ( (currentQuery != null) && (!currentQuery.isEmpty())) {
+                etQuery.setText(currentQuery);
+            }
+        }
     }
 
     private void setupViews() {
@@ -106,7 +109,7 @@ public class SearchActivity extends Activity {
 
         AsyncHttpClient client = new AsyncHttpClient();
         //https://ajax.googleapis.com/ajax/services/search/images?q=Android&v=1.0
-        String currentQuery = SEARCH_URL_PREFIX + Uri.encode(query) + "&start=0";
+        String currentQuery = SEARCH_URL_PREFIX + Uri.encode(query) + "&start=" + start;
         String settingsString = settings.buildQueryParams();
         if (!settingsString.isEmpty()) {
             currentQuery = currentQuery + "&" + settingsString;
@@ -131,6 +134,11 @@ public class SearchActivity extends Activity {
 
             }
         });
+    }
+
+    public void onLoadMore(View view) {
+        start += 8;
+        onImageSearch(view);
     }
     
 }
