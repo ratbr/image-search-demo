@@ -65,7 +65,6 @@ public class SearchSettingsActivity extends Activity {
                     settings.setColorFilter(selected);
                 }
 
-                Toast.makeText(parentView.getContext(), tag + "=" + selected, Toast.LENGTH_SHORT).show();
             }
 
             @Override

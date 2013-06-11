@@ -105,7 +105,6 @@ public class SearchActivity extends Activity {
 
     public void onImageSearch(View view) {
         String query = etQuery.getText().toString();
-        Toast.makeText(this, "Searching for " + query, Toast.LENGTH_SHORT).show();
 
         AsyncHttpClient client = new AsyncHttpClient();
         //https://ajax.googleapis.com/ajax/services/search/images?q=Android&v=1.0
