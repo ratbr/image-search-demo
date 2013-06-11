@@ -5,7 +5,9 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.app.Activity;
 import android.util.Log;
+import android.view.ContextMenu;
 import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.Button;
@@ -30,6 +32,8 @@ public class SearchActivity extends Activity {
     List<ImageResult> imageResults = new ArrayList<ImageResult>();
     ImageResultArrayAdapter adapter;
 
+    SearchSettings settings;
+
     public static final String  SEARCH_URL_PREFIX = "https://ajax.googleapis.com/ajax/services/search/images?v=1.0&rsz=8&q=";
 
 
@@ -37,6 +41,20 @@ public class SearchActivity extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_search);
+
+        //TODO: Settings from saved instance state OR from intent.
+        Intent intent = getIntent();
+        if (intent != null) {
+            Bundle bundle = intent.getExtras();
+            if (bundle != null) {
+                settings = bundle.getParcelable(SearchSettings.SEARCHSETTINGS);
+            }
+        }
+
+        if (settings == null) {
+            settings = new SearchSettings();
+        }
+
         setupViews();
         adapter = new ImageResultArrayAdapter(this, imageResults);
         gvResults.setAdapter(adapter);
@@ -48,7 +66,6 @@ public class SearchActivity extends Activity {
                 ImageResult imageResult = imageResults.get(i);
                 intent.putExtra("url", imageResult.getFullUrl());
                 startActivity(intent);
-
             }
         });
     }
@@ -64,6 +81,15 @@ public class SearchActivity extends Activity {
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.main, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+
+        Intent intent = new Intent(getApplicationContext(), SearchSettingsActivity.class);
+        intent.putExtra(SearchSettings.SEARCHSETTINGS, settings);
+        startActivity(intent);
         return true;
     }
 

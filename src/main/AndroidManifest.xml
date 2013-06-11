@@ -6,7 +6,7 @@
 
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-sdk
-        android:minSdkVersion="10"
+        android:minSdkVersion="11"
         android:targetSdkVersion="16" />
 
     <application
@@ -24,6 +24,9 @@
             </intent-filter>
         </activity>
         <activity android:name=".ImageDisplayActivity"/>
+        <activity
+                android:name=".SearchSettingsActivity"
+                android:label="search_settings"/>
     </application>
 
 </manifest>
