@@ -26,6 +26,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class SearchActivity extends Activity {
+    public static final String CURRENTQUERY = "currentquery";
     EditText etQuery;
     GridView gvResults;
     Button btnSearch;
@@ -41,6 +42,7 @@ public class SearchActivity extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_search);
+        setupViews();
 
         //TODO: Settings from saved instance state OR from intent.
         Intent intent = getIntent();
@@ -49,13 +51,17 @@ public class SearchActivity extends Activity {
             if (bundle != null) {
                 settings = bundle.getParcelable(SearchSettings.SEARCHSETTINGS);
             }
+
+            String currentQuery = intent.getStringExtra(CURRENTQUERY);
+            if ( (currentQuery != null) && (!currentQuery.isEmpty())) {
+                etQuery.setText(currentQuery);
+            }
         }
 
         if (settings == null) {
             settings = new SearchSettings();
         }
 
-        setupViews();
         adapter = new ImageResultArrayAdapter(this, imageResults);
         gvResults.setAdapter(adapter);
 
@@ -89,6 +95,7 @@ public class SearchActivity extends Activity {
 
         Intent intent = new Intent(getApplicationContext(), SearchSettingsActivity.class);
         intent.putExtra(SearchSettings.SEARCHSETTINGS, settings);
+        intent.putExtra(CURRENTQUERY, etQuery.getText().toString());
         startActivity(intent);
         return true;
     }
@@ -100,6 +107,10 @@ public class SearchActivity extends Activity {
         AsyncHttpClient client = new AsyncHttpClient();
         //https://ajax.googleapis.com/ajax/services/search/images?q=Android&v=1.0
         String currentQuery = SEARCH_URL_PREFIX + Uri.encode(query) + "&start=0";
+        String settingsString = settings.buildQueryParams();
+        if (!settingsString.isEmpty()) {
+            currentQuery = currentQuery + "&" + settingsString;
+        }
         Log.d("DEBUG", currentQuery);
 
         client.get(currentQuery, new JsonHttpResponseHandler() {

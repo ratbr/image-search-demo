@@ -3,6 +3,7 @@ package com.ratbr.learn.imagesearch;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.webkit.URLUtil;
 import android.widget.AdapterView;
@@ -21,11 +22,16 @@ public class SearchSettingsActivity extends Activity {
     private EditText etSiteFilter;
 
     private SearchSettings settings;
+    private String queryString;
 
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_search_settings);
         settings = getIntent().getExtras().getParcelable(SearchSettings.SEARCHSETTINGS);
+        queryString = getIntent().getStringExtra(SearchActivity.CURRENTQUERY);
+        if (queryString == null) {
+            queryString = "";
+        }
         setupViews();
     }
 
@@ -90,8 +96,10 @@ public class SearchSettingsActivity extends Activity {
     }
 
     private void returnToSearchActivity() {
+        Log.e("ratbr", "querystring = " + queryString);
         Intent intent = new Intent(getApplicationContext(), SearchActivity.class);
         intent.putExtra(SearchSettings.SEARCHSETTINGS, settings);
+        intent.putExtra(SearchActivity.CURRENTQUERY, queryString);
         startActivity(intent);
     }
 

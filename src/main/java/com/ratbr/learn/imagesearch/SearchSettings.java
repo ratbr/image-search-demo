@@ -8,9 +8,9 @@ import android.os.Parcelable;
  */
 public class SearchSettings implements Parcelable {
     public static final String SEARCHSETTINGS = "searchsettings";
-    private String imageSize = "icon";
-    private String imageType = "face";
-    private String colorFilter = "purple";
+    private String imageSize = "";
+    private String imageType = "";
+    private String colorFilter = "";
     private String siteFilter = "";
 
 
